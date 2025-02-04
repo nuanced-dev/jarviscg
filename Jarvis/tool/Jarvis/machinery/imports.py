@@ -22,7 +22,7 @@
 import sys
 import ast
 import os
-import importlib
+import importlib.abc
 import copy
 import pkg_resources
 import utils
