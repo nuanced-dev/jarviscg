@@ -15,22 +15,22 @@
 import json
 import os
 
-from processing.extProcessor import ExtProcessor
-from machinery.scopes import ScopeManager, ScopeItem
-from machinery.definitions import (
+from .processing.extProcessor import ExtProcessor
+from .machinery.scopes import ScopeManager, ScopeItem
+from .machinery.definitions import (
     DefinitionManager,
     Definition,
     ChangeManager,
     ChangeItem,
 )
-from machinery.imports import ImportManager
-from machinery.classes import ClassManager, ClassNode
-from machinery.returns import ReturnManager
-from machinery.callgraph import CallGraph
-from machinery.modules import ModuleManager
-from machinery.nodes import NodeManager
-from machinery import gol
-import utils
+from .machinery.imports import ImportManager
+from .machinery.classes import ClassManager, ClassNode
+from .machinery.returns import ReturnManager
+from .machinery.callgraph import CallGraph
+from .machinery.modules import ModuleManager
+from .machinery.nodes import NodeManager
+from .machinery import gol
+from . import utils
 
 
 class CallGraphGenerator(object):

@@ -13,23 +13,23 @@
 # limitations under the License.
 
 import ast
-from machinery.definitions import (
+from jarviscg.machinery.definitions import (
     Definition,
     DefinitionManager,
     ChangeManager,
     ChangeItem,
 )
-from machinery.classes import ClassManager, ClassNode
-from machinery.scopes import ScopeManager, ScopeItem
-from processing.base import ProcessingBase
-from machinery.imports import ImportManager
-from machinery.nodes import NodeManager
-from machinery.modules import ModuleManager, Module
-from machinery import gol
+from jarviscg.machinery.classes import ClassManager, ClassNode
+from jarviscg.machinery.scopes import ScopeManager, ScopeItem
+from jarviscg.processing.base import ProcessingBase
+from jarviscg.machinery.imports import ImportManager
+from jarviscg.machinery.nodes import NodeManager
+from jarviscg.machinery.modules import ModuleManager, Module
+from jarviscg.machinery import gol
 
-import utils
+from jarviscg import utils
 from functools import reduce
-from machinery.callgraph import CallGraph
+from jarviscg.machinery.callgraph import CallGraph
 
 
 class ExtProcessor(ProcessingBase):

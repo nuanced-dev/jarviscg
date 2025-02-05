@@ -1,4 +1,4 @@
-import utils
+from jarviscg import utils
 
 
 class ReturnManager(object):

@@ -14,9 +14,9 @@
 
 import argparse
 import time
-import formats
-from jarvis import CallGraphGenerator
-from utils.constants import CALL_GRAPH_OP, KEY_ERR_OP
+from . import formats
+from .jarvis import CallGraphGenerator
+from .utils.constants import CALL_GRAPH_OP, KEY_ERR_OP
 import json
 
 
@@ -82,8 +82,3 @@ def main():
             f.write(json.dumps(output))
     else:
         print(json.dumps(output))
-    
-
-
-if __name__ == '__main__':
-    main()

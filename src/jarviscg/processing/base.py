@@ -14,8 +14,8 @@
 import ast
 import os
 from functools import reduce
-import utils
-from machinery.definitions import Definition
+from jarviscg import utils
+from jarviscg.machinery.definitions import Definition
 
 
 

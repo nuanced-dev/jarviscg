@@ -18,7 +18,7 @@ from pkg_resources import Requirement
 
 from .base import BaseFormatter
 
-import utils
+from jarviscg import utils
 
 
 class Fasten(BaseFormatter):
