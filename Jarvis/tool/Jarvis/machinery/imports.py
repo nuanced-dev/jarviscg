@@ -22,7 +22,8 @@
 import sys
 import ast
 import os
-import importlib
+import importlib.abc
+import importlib.metadata
 import copy
 import pkg_resources
 import utils
