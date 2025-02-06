@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
-jarviscg = "jarviscg:jarvis_cli.main"
+jarviscg = "jarviscg:cli.main"
 
 [build-system]
 requires = ["hatchling"]
