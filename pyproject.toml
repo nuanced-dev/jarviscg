@@ -8,7 +8,6 @@ authors = [
 ]
 requires-python = ">=3.8"
 dependencies = [
-    "psutil>=6.1.1",
     "setuptools>=75.3.0",
 ]
 
