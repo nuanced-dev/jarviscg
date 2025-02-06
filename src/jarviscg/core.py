@@ -15,22 +15,22 @@
 import json
 import os
 
-from .processing.extProcessor import ExtProcessor
-from .machinery.scopes import ScopeManager, ScopeItem
-from .machinery.definitions import (
+from jarviscg.processing.extProcessor import ExtProcessor
+from jarviscg.machinery.scopes import ScopeManager, ScopeItem
+from jarviscg.machinery.definitions import (
     DefinitionManager,
     Definition,
     ChangeManager,
     ChangeItem,
 )
-from .machinery.imports import ImportManager
-from .machinery.classes import ClassManager, ClassNode
-from .machinery.returns import ReturnManager
-from .machinery.callgraph import CallGraph
-from .machinery.modules import ModuleManager
-from .machinery.nodes import NodeManager
-from .machinery import gol
-from . import utils
+from jarviscg.machinery.imports import ImportManager
+from jarviscg.machinery.classes import ClassManager, ClassNode
+from jarviscg.machinery.returns import ReturnManager
+from jarviscg.machinery.callgraph import CallGraph
+from jarviscg.machinery.modules import ModuleManager
+from jarviscg.machinery.nodes import NodeManager
+from jarviscg.machinery import gol
+from jarviscg import utils
 
 
 class CallGraphGenerator(object):

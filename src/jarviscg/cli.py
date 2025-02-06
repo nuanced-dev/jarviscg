@@ -14,9 +14,9 @@
 
 import argparse
 import time
-from . import formats
-from .core import CallGraphGenerator
-from .utils.constants import CALL_GRAPH_OP, KEY_ERR_OP
+from jarviscg import formats
+from jarviscg.core import CallGraphGenerator
+from jarviscg.utils.constants import CALL_GRAPH_OP, KEY_ERR_OP
 import json
 
 
