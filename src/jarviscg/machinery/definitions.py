@@ -19,10 +19,10 @@
 # under the License.
 #
 
-import utils
+from jarviscg import utils
 import heapq
 import math
-from machinery import gol
+from jarviscg.machinery import gol
 
 class PointItem(object):
     def __init__(self, row, values=set()):

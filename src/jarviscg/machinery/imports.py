@@ -26,7 +26,7 @@ import importlib.abc
 import importlib.metadata
 import copy
 import pkg_resources
-import utils
+from jarviscg import utils
 
 def get_custom_loader(ig_obj):
     """

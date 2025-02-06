@@ -21,7 +21,7 @@
 import symtable
 
 
-import utils
+from jarviscg import utils
 import copy
 
 class ScopeManager(object):

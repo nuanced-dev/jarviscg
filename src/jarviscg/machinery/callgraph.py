@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import re
-import utils
+from jarviscg import utils
 
 IF_FLAG = "<if"
 WHILE_FLAG = "<while"
