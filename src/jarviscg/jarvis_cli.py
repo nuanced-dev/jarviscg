@@ -15,7 +15,7 @@
 import argparse
 import time
 from . import formats
-from .jarvis import CallGraphGenerator
+from .core import CallGraphGenerator
 from .utils.constants import CALL_GRAPH_OP, KEY_ERR_OP
 import json
 
