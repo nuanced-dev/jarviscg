@@ -31,11 +31,13 @@ start_pycg(){
 				output_jarvis="$output_dir/jarvis.json"
 #				echo $output_pycg
 				python3 $Base/pycg/__main__.py  --package ${file%/*} --noclass -o $output_pycg
-        python3 -m . $file --precision --package ${file%/*} -o $output_jarvis
+        jarviscg $file --precision --package ${file%/*} -o $output_jarvis
  
 			fi
 		fi
 	done
 }
-start_pycg $Path
 
+uv tool install $(pwd)
+start_pycg $Path
+uv tool uninstall jarviscg
