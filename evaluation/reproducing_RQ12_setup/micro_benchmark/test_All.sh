@@ -1,7 +1,7 @@
 #!/bin/bash
-Path=$(pwd)/dataset/micro_benchmark
+Path=$(pwd)/evaluation/dataset/micro_benchmark
 OutputDir=$(pwd)/output/micro_benchmark
-Base=$(pwd)/tool
+Base=$(pwd)/src
 
 start_pycg(){
 	if [ ! -d "$OutputDir" ]; then
@@ -31,7 +31,7 @@ start_pycg(){
 				output_jarvis="$output_dir/jarvis.json"
 #				echo $output_pycg
 				python3 $Base/pycg/__main__.py  --package ${file%/*} --noclass -o $output_pycg
-				python3 $Base/Jarvis/jarvis_cli.py $file --precision --package ${file%/*} -o $output_jarvis
+        python3 -m . $file --precision --package ${file%/*} -o $output_jarvis
  
 			fi
 		fi
