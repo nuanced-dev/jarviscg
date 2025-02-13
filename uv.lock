@@ -37,6 +37,7 @@ name = "jarviscg"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "pytest" },
     { name = "setuptools", version = "75.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "setuptools", version = "75.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
 ]
@@ -47,7 +48,10 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "setuptools", specifier = ">=75.3.0" }]
+requires-dist = [
+    { name = "pytest", specifier = ">=8.3.4" },
+    { name = "setuptools", specifier = ">=75.3.0" },
+]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=8.3.4" }]

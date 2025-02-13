@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .fasten import Fasten
-from .simple import Simple
 from .as_graph import AsGraph
+from .fasten import Fasten
+from .nuanced import Nuanced
+from .simple import Simple
