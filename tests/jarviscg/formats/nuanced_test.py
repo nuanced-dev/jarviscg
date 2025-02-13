@@ -14,5 +14,5 @@ def test_nuanced_formatter_includes_filenames() -> None:
     formatter = formats.Nuanced(cg)
     output = formatter.generate()
 
-    assert output["tests.fixtures.fixture_class.FixtureClass.bar"]["filepath"] == os.abspath("tests/fixtures/fixture_class.py")
+    assert output["tests.fixtures.fixture_class.FixtureClass.bar"]["filepath"] == os.path.abspath("tests/fixtures/fixture_class.py")
     assert output["tests.fixtures.fixture_class.FixtureClass.bar"]["callees"] == ["tests.fixtures.fixture_class.FixtureClass.foo"]
