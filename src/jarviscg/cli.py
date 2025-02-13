@@ -63,7 +63,7 @@ def main():
     cg = CallGraphGenerator(args.module, args.package, decy=args.decy,precision=args.precision, moduleEntry=args.entry_point)
     cg.analyze()
 
-    formatter = formats.Nuanced(cg)
+    formatter = formats.Simple(cg)
     output = formatter.generate()
 
     if args.output:
