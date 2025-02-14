@@ -8,6 +8,8 @@ authors = [
 ]
 requires-python = ">=3.8"
 dependencies = [
+    "deepdiff>=8.2.0",
+    "pytest>=8.3.4",
     "setuptools>=75.3.0",
 ]
 
@@ -21,4 +23,9 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "pytest>=8.3.4",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "."
 ]

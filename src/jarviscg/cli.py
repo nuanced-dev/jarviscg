@@ -65,17 +65,6 @@ def main():
 
     formatter = formats.Simple(cg)
     output = formatter.generate()
-    # if args.operation == CALL_GRAPH_OP:
-    #     if args.fasten:
-    #         formatter = formats.Fasten(cg, args.package,
-    #                                    args.product, args.forge, args.version, args.timestamp)
-    #     else:
-    #         formatter = formats.Simple(cg)
-    #     output = formatter.generate()
-    # else:
-    #     output = cg.output_key_errs()
-    output = formatter.generate()
-    as_formatter = formats.AsGraph(cg)
 
     if args.output:
         with open(args.output, "w+") as f:
