@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import itertools
 import json
 import os
 
@@ -42,7 +43,19 @@ class CallGraphGenerator(object):
         moduleEntry=[],
         precision=False
     ):
-        self.entry_points = entry_points
+        # group entry point by path
+        grouped = itertools.groupby(entry_points, lambda x: "/".join(x.split("/")[0:-1]))
+        groups_ordered_by_depth = [(k, list(g)) for k, g in grouped]
+        groups_ordered_by_depth.sort(key=lambda x: x[0].count("/"))
+        # sort groups from most deeply nested to least deeply nested (count
+        # occurrences of "/")
+        groups_ordered_by_depth = list(reversed(groups_ordered_by_depth))
+        # sort so that __init__ first in each group if exists
+        groups_ordered_alphabetically = [sorted(g[1]) for g in groups_ordered_by_depth]
+        # flatten
+        flattened = list(itertools.chain.from_iterable(groups_ordered_alphabetically))
+
+        self.entry_points = flattened
         self.package = package
         self.state = None
         self.decy = decy
@@ -104,6 +117,7 @@ class CallGraphGenerator(object):
         modules_analyzed = modules_analyzed
         processor: ExtProcessor = None
         input_pkg = None
+
         for entry_point in self.entry_points:
             input_pkg = self.package
             input_mod = self._get_mod_name(entry_point, input_pkg)
