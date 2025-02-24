@@ -1,4 +1,8 @@
 from datetime import datetime
+from fixtures._utils.util import util_function
+
+def invoke_util_function() -> None:
+    util_function()
 
 class FixtureClass():
     def __init__(self):

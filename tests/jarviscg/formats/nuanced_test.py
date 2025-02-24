@@ -28,7 +28,7 @@ def test_nuanced_formatter_includes_filenames() -> None:
         },
         "tests.fixtures.fixture_class.FixtureClass.bar": {
             "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
-            "callees": ["tests.fixtures.fixture_class.FixtureClass.foo"],
+            "callees": ["tests.fixtures.fixture_class.FixtureClass.foo", "tests.fixtures._utils.util.util_function"],
         },
         "tests.fixtures.fixture_class.FixtureClass.foo": {
             "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
