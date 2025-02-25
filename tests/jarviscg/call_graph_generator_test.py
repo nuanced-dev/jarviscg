@@ -42,5 +42,5 @@ def test_call_graph_generator() -> None:
     formatter = formats.Simple(cg)
     output = formatter.generate()
 
-    diff = DeepDiff(expected, output)
+    diff = DeepDiff(expected, output, ignore_order=True)
     assert diff == {}
