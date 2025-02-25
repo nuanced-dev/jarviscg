@@ -43,7 +43,6 @@ class CallGraphGenerator(object):
         moduleEntry=[],
         precision=False
     ):
-
         self.entry_points = self._depth_first_by_directory(entry_points)
         self.package = package
         self.state = None
@@ -106,7 +105,6 @@ class CallGraphGenerator(object):
         modules_analyzed = modules_analyzed
         processor: ExtProcessor = None
         input_pkg = None
-
         for entry_point in self.entry_points:
             input_pkg = self.package
             input_mod = self._get_mod_name(entry_point, input_pkg)

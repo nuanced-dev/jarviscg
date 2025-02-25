@@ -4,13 +4,15 @@ import pytest
 from jarviscg.core import CallGraphGenerator
 from jarviscg import formats
 
+# Necessary because CallGraphGenerator expects to be running one directory
+# up from shallowest module definitions
 @pytest.fixture(autouse=True)
-def teardown():
+def change_directory():
+    os.chdir("tests")
     yield
     os.chdir("../")
 
 def test_nuanced_formatter_includes_filenames() -> None:
-    os.chdir("tests")
     entrypoints = [
         "./fixtures/fixture_class.py",
         "./fixtures/other_fixture_class.py",
