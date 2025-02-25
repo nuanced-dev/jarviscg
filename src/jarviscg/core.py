@@ -43,19 +43,8 @@ class CallGraphGenerator(object):
         moduleEntry=[],
         precision=False
     ):
-        # group entry point by path
-        grouped = itertools.groupby(entry_points, lambda x: "/".join(x.split("/")[0:-1]))
-        groups_ordered_by_depth = [(k, list(g)) for k, g in grouped]
-        groups_ordered_by_depth.sort(key=lambda x: x[0].count("/"))
-        # sort groups from most deeply nested to least deeply nested (count
-        # occurrences of "/")
-        groups_ordered_by_depth = list(reversed(groups_ordered_by_depth))
-        # sort so that __init__ first in each group if exists
-        groups_ordered_alphabetically = [sorted(g[1]) for g in groups_ordered_by_depth]
-        # flatten
-        flattened = list(itertools.chain.from_iterable(groups_ordered_alphabetically))
 
-        self.entry_points = entry_points #flattened
+        self.entry_points = self._depth_first_by_directory(entry_points)
         self.package = package
         self.state = None
         self.decy = decy
@@ -223,3 +212,14 @@ class CallGraphGenerator(object):
 
     def get_as_graph(self):
         return self.def_manager.get_defs().items()
+
+    def _depth_first_by_directory(self, file_paths: list) -> list:
+        path_parts_separator = "/"
+        grouped = itertools.groupby(file_paths, lambda x: path_parts_separator.join(x.split(path_parts_separator)[0:-1]))
+        groups_by_dir_path = [(k, list(g)) for k, g in grouped]
+        groups_by_dir_path.sort(key=lambda x: x[0].count(path_parts_separator))
+        groups_ordered_by_depth_desc = list(reversed(groups_by_dir_path))
+        group_items_ordered_alphabetically = [sorted(g[1]) for g in groups_ordered_by_depth_desc]
+        flattened = list(itertools.chain.from_iterable(group_items_ordered_alphabetically))
+        return flattened
+
