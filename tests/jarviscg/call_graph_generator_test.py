@@ -5,32 +5,35 @@ import pytest
 from jarviscg.core import CallGraphGenerator
 from jarviscg import formats
 
+@pytest.fixture(autouse=True)
+def teardown():
+    yield
+    os.chdir("../")
+
 def test_call_graph_generator() -> None:
+    os.chdir("tests")
     entrypoints = [
-            "./tests/__init__.py",
-            "./tests/fixtures/plugins.py",
-            "./tests/fixtures/__init__.py",
-            "./tests/fixtures/lazyframe/frame.py",
-            "./tests/fixtures/lazyframe/__init__.py",
-            "./tests/fixtures/_utils/parse/expr.py",
-            "./tests/fixtures/_utils/__init__.py",
-            "./tests/fixtures/_utils/parse/__init__.py"
+            "./fixtures/plugins.py",
+            "./fixtures/__init__.py",
+            "./fixtures/lazyframe/frame.py",
+            "./fixtures/lazyframe/__init__.py",
+            "./fixtures/_utils/parse/expr.py",
+            "./fixtures/_utils/__init__.py",
+            "./fixtures/_utils/parse/__init__.py",
     ]
     expected = {
-        "tests": [],
-        "tests.fixtures.plugins": [],
-        "tests.fixtures": [],
-        "tests.fixtures.lazyframe.frame": ["tests.fixtures.lazyframe.frame.LazyFrame"],
-        "tests.fixtures.lazyframe.frame.LazyFrame": [],
-        "tests.fixtures.lazyframe": [],
-        "tests.fixtures._utils.parse.expr": [],
-        "tests.fixtures._utils": [],
-        "tests.fixtures._utils.parse": [],
-        "tests.fixtures.lazyframe.frame.LazyFrame.group_by": ["fixtures._utils.parse.parse_into_list_of_expressions"],
-        "fixtures._utils.parse.parse_into_list_of_expressions": [],
-        "tests.fixtures.plugins.register_plugin_function": ["fixtures._utils.parse.parse_into_list_of_expressions"],
-        "tests.fixtures._utils.parse.expr.parse_into_list_of_expressions": ["tests.fixtures._utils.parse.expr._parse_positional_inputs"],
-        "tests.fixtures._utils.parse.expr._parse_positional_inputs": [],
+        "fixtures.plugins": [],
+        "fixtures": [],
+        "fixtures.lazyframe.frame": ["fixtures.lazyframe.frame.LazyFrame"],
+        "fixtures.lazyframe.frame.LazyFrame": [],
+        "fixtures.lazyframe": [],
+        "fixtures._utils.parse.expr": [],
+        "fixtures._utils": [],
+        "fixtures._utils.parse": [],
+        "fixtures.lazyframe.frame.LazyFrame.group_by": ["fixtures._utils.parse.expr.parse_into_list_of_expressions"],
+        "fixtures.plugins.register_plugin_function": ["fixtures._utils.parse.expr.parse_into_list_of_expressions"],
+        "fixtures._utils.parse.expr.parse_into_list_of_expressions": ["fixtures._utils.parse.expr._parse_positional_inputs"],
+        "fixtures._utils.parse.expr._parse_positional_inputs": [],
     }
 
     cg = CallGraphGenerator(entrypoints, None)
