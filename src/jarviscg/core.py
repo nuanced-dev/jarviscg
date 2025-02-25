@@ -55,7 +55,7 @@ class CallGraphGenerator(object):
         # flatten
         flattened = list(itertools.chain.from_iterable(groups_ordered_alphabetically))
 
-        self.entry_points = flattened
+        self.entry_points = entry_points #flattened
         self.package = package
         self.state = None
         self.decy = decy
