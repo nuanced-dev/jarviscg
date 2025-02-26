@@ -1,4 +1,4 @@
-from tests.fixtures.fixture_class import FixtureClass
+from fixtures.fixture_class import FixtureClass
 
 class OtherFixtureClass():
     def baz(self) -> None:

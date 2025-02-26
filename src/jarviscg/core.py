@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import itertools
 import json
 import os
 
@@ -42,7 +43,7 @@ class CallGraphGenerator(object):
         moduleEntry=[],
         precision=False
     ):
-        self.entry_points = entry_points
+        self.entry_points = self._depth_first_by_directory(entry_points)
         self.package = package
         self.state = None
         self.decy = decy
@@ -209,3 +210,14 @@ class CallGraphGenerator(object):
 
     def get_as_graph(self):
         return self.def_manager.get_defs().items()
+
+    def _depth_first_by_directory(self, file_paths: list) -> list:
+        path_parts_separator = "/"
+        grouped = itertools.groupby(file_paths, lambda x: path_parts_separator.join(x.split(path_parts_separator)[0:-1]))
+        groups_by_dir_path = [(k, list(g)) for k, g in grouped]
+        groups_by_dir_path.sort(key=lambda x: x[0].count(path_parts_separator))
+        groups_ordered_by_depth_desc = list(reversed(groups_by_dir_path))
+        group_items_ordered_alphabetically = [sorted(g[1]) for g in groups_ordered_by_depth_desc]
+        flattened = list(itertools.chain.from_iterable(group_items_ordered_alphabetically))
+        return flattened
+
