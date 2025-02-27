@@ -252,6 +252,13 @@ class ExtProcessor(ProcessingBase):
             # to have the correct points_to set
             iterate_mod_items(items["functions"], utils.constants.FUN_DEF)
             iterate_mod_items(items["classes"], utils.constants.CLS_DEF)
+            for k, v in items["exports"].items():
+                f1 = k
+                f2 = v
+                f1_defi = self.def_manager.get(f1) or self.def_manager.create(f1, utils.constants.FUN_DEF)
+                f2_defi = self.def_manager.get(f2) or self.def_manager.create(f2, utils.constants.FUN_DEF)
+                self.cg.add_edge(f1_defi.get_ns(), f2_defi.get_ns())
+
             self.pushStack(root_defi)
         self.modules_analyzed.add(self.filename)
 
