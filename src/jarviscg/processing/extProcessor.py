@@ -254,14 +254,13 @@ class ExtProcessor(ProcessingBase):
             iterate_mod_items(functions_and_classes["classes"], utils.constants.CLS_DEF)
 
             if self.filename.endswith(f"/{utils.constants.INIT_FILE_NAME}"):
-                exports = self._parse_module_index(self.modname, self.contents)
+                indexed_functions = self._parse_module_index(self.modname, self.contents)
 
-                for k, v in exports.items():
-                    f1 = k
-                    f2 = v
-                    f1_defi = self.def_manager.get(f1) or self.def_manager.create(f1, utils.constants.FUN_DEF)
-                    f2_defi = self.def_manager.get(f2) or self.def_manager.create(f2, utils.constants.FUN_DEF)
-                    self.cg.add_edge(f1_defi.get_ns(), f2_defi.get_ns())
+                for indexed_function, referenced_function in indexed_functions.items():
+                    indexed_function_defi = self.def_manager.get(indexed_function) or self.def_manager.create(indexed_function, utils.constants.FUN_DEF)
+                    referenced_function_defi = self.def_manager.get(referenced_function) or self.def_manager.create(referenced_function, utils.constants.FUN_DEF)
+
+                    self.cg.add_edge(indexed_function_defi.get_ns(), referenced_function_defi.get_ns())
 
             self.pushStack(root_defi)
         self.modules_analyzed.add(self.filename)
