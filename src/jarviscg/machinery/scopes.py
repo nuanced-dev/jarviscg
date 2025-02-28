@@ -56,10 +56,7 @@ class ScopeManager(object):
             all_names = []
             imported_names_modules = {}
 
-            with open(file_path, 'r') as file:
-                content = file.read()
-
-                tree = ast.parse(content)
+            tree = ast.parse(contents)
 
             for node in ast.walk(tree):
                 if isinstance(node, ast.ImportFrom):
