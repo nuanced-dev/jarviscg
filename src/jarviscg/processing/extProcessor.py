@@ -236,7 +236,7 @@ class ExtProcessor(ProcessingBase):
         self.node_manager.add(self.modname, node)
         if not root_sc or root_sc:
             # initialize module scopes
-            items = self.scope_manager.handle_module(
+            functions_and_classes = self.scope_manager.handle_module(
                 self.modname, self.filename, self.contents
             )
             root_sc = self.scope_manager.get_scope(self.modname)
@@ -250,9 +250,9 @@ class ExtProcessor(ProcessingBase):
             # we do this here, because scope_manager doesn't have an
             # interface with def_manager, and we want function definitions
             # to have the correct points_to set
-            iterate_mod_items(items["functions"], utils.constants.FUN_DEF)
-            iterate_mod_items(items["classes"], utils.constants.CLS_DEF)
-            for k, v in items["exports"].items():
+            iterate_mod_items(functions_and_classes["functions"], utils.constants.FUN_DEF)
+            iterate_mod_items(functions_and_classes["classes"], utils.constants.CLS_DEF)
+            for k, v in functions_and_classes["exports"].items():
                 f1 = k
                 f2 = v
                 f1_defi = self.def_manager.get(f1) or self.def_manager.create(f1, utils.constants.FUN_DEF)
