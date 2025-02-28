@@ -253,7 +253,7 @@ class ExtProcessor(ProcessingBase):
             iterate_mod_items(functions_and_classes["functions"], utils.constants.FUN_DEF)
             iterate_mod_items(functions_and_classes["classes"], utils.constants.CLS_DEF)
 
-            if self.filename.endswith("/__init__.py"):
+            if self.filename.endswith(f"/{utils.constants.INIT_FILE_NAME}"):
                 exports = self._parse_module_index(self.modname, self.contents)
 
                 for k, v in exports.items():
@@ -2104,7 +2104,7 @@ class ExtProcessor(ProcessingBase):
                     indexed_function_names[alias.name] = node.module
 
             if isinstance(node, ast.Assign):
-                if isinstance(node.targets[0], ast.Name) and node.targets[0].id == '__all__':
+                if isinstance(node.targets[0], ast.Name) and node.targets[0].id == utils.constants.ALL_LIST_NAME:
                     if isinstance(node.value, ast.List):
                         for element in node.value.elts:
                             if isinstance(element, ast.Constant):

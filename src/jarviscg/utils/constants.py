@@ -35,6 +35,8 @@ COPY_DEF        = "COPY"
 
 OBJECT_BASE     = "object"
 
+INIT_FILE_NAME  = "__init__.py"
+ALL_LIST_NAME   = "__all__"
 CLS_INIT        = "__init__"
 ITER_METHOD     = "__iter__"
 NEXT_METHOD     = "__next__"
