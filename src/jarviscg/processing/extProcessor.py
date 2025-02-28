@@ -252,7 +252,9 @@ class ExtProcessor(ProcessingBase):
             # to have the correct points_to set
             iterate_mod_items(functions_and_classes["functions"], utils.constants.FUN_DEF)
             iterate_mod_items(functions_and_classes["classes"], utils.constants.CLS_DEF)
-            for k, v in functions_and_classes["exports"].items():
+            exports = self._exports(self.modname, self.contents, self.filename)
+
+            for k, v in exports.items():
                 f1 = k
                 f2 = v
                 f1_defi = self.def_manager.get(f1) or self.def_manager.create(f1, utils.constants.FUN_DEF)
@@ -2088,3 +2090,39 @@ class ExtProcessor(ProcessingBase):
         #     # return ['<map>']
         else:
             return [calleeNs]
+
+
+    def _get_all_from_init(self, contents):
+        all_names = []
+        imported_names_modules = {}
+
+        tree = ast.parse(contents)
+
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom):
+                for alias in node.names:
+                    imported_names_modules[alias.name] = node.module
+
+            if isinstance(node, ast.Assign):
+                if isinstance(node.targets[0], ast.Name) and node.targets[0].id == '__all__':
+                    if isinstance(node.value, ast.List):
+                        for element in node.value.elts:
+                            if isinstance(element, ast.Constant):
+                                if element.value not in imported_names_modules.keys():
+                                    del imported_names_modules[element.value]
+                    break
+
+        return imported_names_modules
+
+    def _exports(self, modname, contents, filename):
+        exports = {}
+
+        if filename.endswith("/__init__.py"):
+            exported_names = self._get_all_from_init(contents)
+
+            for k, v in exported_names.items():
+                key = ".".join([modname, k])
+                value = ".".join([v, k])
+                exports[key] = value
+
+        return exports

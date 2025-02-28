@@ -52,43 +52,9 @@ class ScopeManager(object):
             for t in table.get_children():
                 process(fullns, sc, t)
 
-        def get_all_from_init(file_path):
-            all_names = []
-            imported_names_modules = {}
-
-            tree = ast.parse(contents)
-
-            for node in ast.walk(tree):
-                if isinstance(node, ast.ImportFrom):
-                    for alias in node.names:
-                        imported_names_modules[alias.name] = node.module
-
-                if isinstance(node, ast.Assign):
-                    if isinstance(node.targets[0], ast.Name) and node.targets[0].id == '__all__':
-                        if isinstance(node.value, ast.List):
-                            for element in node.value.elts:
-                                if isinstance(element, ast.Constant):
-                                    if element.value not in imported_names_modules.keys():
-                                        del imported_names_modules[element.value]
-                        break
-
-            return imported_names_modules
-
         process(modulename, None, symtable.symtable(contents, filename, compile_type="exec"))
-        exports = {}
 
-        if filename.endswith("/__init__.py"):
-            exported_names = get_all_from_init(filename)
-
-            for k, v in exported_names.items():
-                key = ".".join([modulename, k])
-                value = ".".join([v, k])
-                exports[key] = value
-
-            for n in exports.keys():
-                functions.append(n)
-
-        return {"functions": functions, "classes": classes, "exports": exports}
+        return {"functions": functions, "classes": classes}
 
     def add_defi(self, ns, target, defi):
         scope = self.get_scope(ns)
