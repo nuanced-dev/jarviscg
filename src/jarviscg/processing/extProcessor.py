@@ -252,14 +252,16 @@ class ExtProcessor(ProcessingBase):
             # to have the correct points_to set
             iterate_mod_items(functions_and_classes["functions"], utils.constants.FUN_DEF)
             iterate_mod_items(functions_and_classes["classes"], utils.constants.CLS_DEF)
-            exports = self._exports(self.modname, self.contents, self.filename)
 
-            for k, v in exports.items():
-                f1 = k
-                f2 = v
-                f1_defi = self.def_manager.get(f1) or self.def_manager.create(f1, utils.constants.FUN_DEF)
-                f2_defi = self.def_manager.get(f2) or self.def_manager.create(f2, utils.constants.FUN_DEF)
-                self.cg.add_edge(f1_defi.get_ns(), f2_defi.get_ns())
+            if self.filename.endswith("/__init__.py"):
+                exports = self._parse_module_index(self.modname, self.contents)
+
+                for k, v in exports.items():
+                    f1 = k
+                    f2 = v
+                    f1_defi = self.def_manager.get(f1) or self.def_manager.create(f1, utils.constants.FUN_DEF)
+                    f2_defi = self.def_manager.get(f2) or self.def_manager.create(f2, utils.constants.FUN_DEF)
+                    self.cg.add_edge(f1_defi.get_ns(), f2_defi.get_ns())
 
             self.pushStack(root_defi)
         self.modules_analyzed.add(self.filename)
@@ -2091,38 +2093,30 @@ class ExtProcessor(ProcessingBase):
         else:
             return [calleeNs]
 
-
-    def _get_all_from_init(self, contents):
-        all_names = []
-        imported_names_modules = {}
+    def _parse_module_index(self, modname, contents):
+        indexed_function_names = {}
 
         tree = ast.parse(contents)
 
         for node in ast.walk(tree):
             if isinstance(node, ast.ImportFrom):
                 for alias in node.names:
-                    imported_names_modules[alias.name] = node.module
+                    indexed_function_names[alias.name] = node.module
 
             if isinstance(node, ast.Assign):
                 if isinstance(node.targets[0], ast.Name) and node.targets[0].id == '__all__':
                     if isinstance(node.value, ast.List):
                         for element in node.value.elts:
                             if isinstance(element, ast.Constant):
-                                if element.value not in imported_names_modules.keys():
-                                    del imported_names_modules[element.value]
+                                if element.value not in indexed_function_names.keys():
+                                    del indexed_function_names[element.value]
                     break
 
-        return imported_names_modules
+        indexed_functions = {}
 
-    def _exports(self, modname, contents, filename):
-        exports = {}
+        for function_name, module_path in indexed_function_names.items():
+            indexed_function = ".".join([modname, function_name])
+            referenced_function = ".".join([module_path, function_name])
+            indexed_functions[indexed_function] = referenced_function
 
-        if filename.endswith("/__init__.py"):
-            exported_names = self._get_all_from_init(contents)
-
-            for k, v in exported_names.items():
-                key = ".".join([modname, k])
-                value = ".".join([v, k])
-                exports[key] = value
-
-        return exports
+        return indexed_functions
