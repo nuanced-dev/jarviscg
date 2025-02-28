@@ -18,7 +18,6 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-import ast
 import symtable
 
 
@@ -53,7 +52,6 @@ class ScopeManager(object):
                 process(fullns, sc, t)
 
         process(modulename, None, symtable.symtable(contents, filename, compile_type="exec"))
-
         return {"functions": functions, "classes": classes}
 
     def add_defi(self, ns, target, defi):
