@@ -259,6 +259,7 @@ class ExtProcessor(ProcessingBase):
                 for indexed_function, referenced_function in indexed_functions.items():
                     indexed_function_defi = self.def_manager.get(indexed_function) or self.def_manager.create(indexed_function, utils.constants.FUN_DEF)
                     referenced_function_defi = self.def_manager.get(referenced_function) or self.def_manager.create(referenced_function, utils.constants.FUN_DEF)
+                    mod.add_method(indexed_function_defi.get_ns())
 
                     self.cg.add_edge(indexed_function_defi.get_ns(), referenced_function_defi.get_ns())
 
