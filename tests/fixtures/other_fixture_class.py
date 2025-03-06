@@ -1,6 +1,6 @@
-from fixtures.fixture_class import FixtureClass
+from tests.fixtures.fixture_class import FixtureClass as AliasedFixtureClass
 
 class OtherFixtureClass():
     def baz(self) -> None:
-        ins = FixtureClass()
+        ins = AliasedFixtureClass()
         ins.bar()
