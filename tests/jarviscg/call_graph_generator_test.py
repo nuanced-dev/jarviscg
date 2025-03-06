@@ -37,3 +37,20 @@ def test_call_graph_generator_includes_indexed_functions() -> None:
     diff = DeepDiff(expected, internal_mods)
 
     assert diff == {}
+
+def test_call_graph_generator_includes_refs_to_aliased_classes() -> None:
+    caller_of_aliased_class = "fixtures.other_fixture_class.OtherFixtureClass.baz"
+    entrypoints = [
+            "./fixtures/__init__.py",
+            "./fixtures/fixture_class.py",
+            "./fixtures/other_fixture_class.py",
+    ]
+
+    cg = CallGraphGenerator(entrypoints, None)
+    cg.analyze()
+    formatter = formats.Simple(cg)
+    output = formatter.generate()
+
+    assert "fixtures.fixture_class.FixtureClass.bar" in output[caller_of_aliased_class]
+    assert "fixtures.fixture_class.FixtureClass.bar" in output.keys()
+    assert alias_name not in output.keys()
