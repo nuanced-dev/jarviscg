@@ -37,3 +37,57 @@ def test_call_graph_generator_includes_indexed_functions() -> None:
     diff = DeepDiff(expected, internal_mods)
 
     assert diff == {}
+
+def test_call_graph_generator_includes_refs_to_aliased_classes() -> None:
+    caller_of_aliased_class = "fixtures.other_fixture_class.OtherFixtureClass.baz"
+    entrypoints = [
+        "./fixtures/__init__.py",
+        "./fixtures/fixture_class.py",
+        "./fixtures/other_fixture_class.py",
+    ]
+
+    cg = CallGraphGenerator(entrypoints, None)
+    cg.analyze()
+    formatter = formats.Simple(cg)
+    output = formatter.generate()
+
+    assert "fixtures.fixture_class.FixtureClass.bar" in output[caller_of_aliased_class]
+    assert "fixtures.fixture_class.FixtureClass.bar" in output.keys()
+
+def test_call_graph_generator_default_builds_incomplete_graph_for_pytest_file() -> None:
+    entrypoints = [
+        "./fixtures/tests/__init__.py",
+        "./fixtures/tests/example_test.py",
+        "./fixtures/fixture_class.py",
+    ]
+
+    cg = CallGraphGenerator(entrypoints, None)
+    cg.analyze()
+    formatter = formats.Simple(cg)
+    output = formatter.generate()
+
+    test_function_callees = output["fixtures.tests.example_test.test_fixture_class_foo_sets_current_time"]
+    assert test_function_callees == ["tests.fixtures.fixture_class.FixtureClass"]
+    assert "tests.fixtures.fixture_class.FixtureClass" in output.keys()
+
+def test_call_graph_generator_with_decy_true_builds_complete_graph_for_pytest_file() -> None:
+    entrypoints = [
+        "./fixtures/tests/__init__.py",
+        "./fixtures/tests/example_test.py",
+        "./fixtures/fixture_class.py",
+    ]
+    expected_callees = [
+        "tests.fixtures.fixture_class.FixtureClass.__init__",
+        "tests.fixtures.fixture_class.FixtureClass.foo",
+    ]
+
+    cg = CallGraphGenerator(entrypoints, None, decy=True)
+    cg.analyze()
+    formatter = formats.Simple(cg)
+    output = formatter.generate()
+
+    test_function_callees = output["fixtures.tests.example_test.test_fixture_class_foo_sets_current_time"]
+    diff = DeepDiff(test_function_callees, expected_callees, ignore_order=True)
+    assert diff == {}
+    for callee in test_function_callees:
+        assert callee in output.keys()
