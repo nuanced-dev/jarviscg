@@ -37,13 +37,13 @@ options:
 ```bash
 % cd jarviscg
 % uv venv
-% source .venv.bin/activate
+% source .venv/bin/activate
 % uv sync
 ```
 
 ## Running pytest tests
 
 ```bash
-% source .venv.bin/activate
+% source .venv/bin/activate
 % pytest tests/
 ```
