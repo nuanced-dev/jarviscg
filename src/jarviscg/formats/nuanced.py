@@ -14,7 +14,9 @@ class Nuanced(BaseFormatter):
             for namespace, info in module["methods"].items():
                 output[namespace] = {
                     "filepath": os.path.abspath(module["filename"]),
-                    "callees": []
+                    "callees": [],
+                    "lineno": info["first"],
+                    "end_lineno": info["last"],
                 }
 
         for src, dst in self.edges:
