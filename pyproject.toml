@@ -1,6 +1,6 @@
 [project]
 name = "jarviscg"
-version = "0.1.0rc1"
+version = "0.1.0rc2"
 description = "Call graph generator for Python forked from pythonJaRvis/pythonJaRvis.github.io"
 readme = "README.md"
 authors = [
