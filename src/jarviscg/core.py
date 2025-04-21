@@ -103,6 +103,7 @@ class CallGraphGenerator(object):
         self, cls, install_hooks=False, modules_analyzed=set(), *args, **kwargs
     ):
         modules_analyzed = modules_analyzed
+        modules_by_order_analyzed = list()
         processor: ExtProcessor = None
         input_pkg = None
         for entry_point in self.entry_points:
@@ -127,6 +128,7 @@ class CallGraphGenerator(object):
             self.module_manager.add_local_modules(input_mod)
             processor.analyze()
             modules_analyzed = modules_analyzed.union(processor.get_modules_analyzed())
+            modules_by_order_analyzed.append(input_mod)
             if install_hooks:
                 self.remove_import_hooks()
         if install_hooks:
@@ -134,7 +136,7 @@ class CallGraphGenerator(object):
             self.import_manager.install_hooks()
         if not self.moduleEntry:
             self.moduleEntry = []
-            for local in self.module_manager.local:
+            for local in modules_by_order_analyzed:
                 moduleNode = self.module_manager.get(local)
                 if not moduleNode:
                     continue
@@ -220,4 +222,3 @@ class CallGraphGenerator(object):
         group_items_ordered_alphabetically = [sorted(g[1]) for g in groups_ordered_by_depth_desc]
         flattened = list(itertools.chain.from_iterable(group_items_ordered_alphabetically))
         return flattened
-
