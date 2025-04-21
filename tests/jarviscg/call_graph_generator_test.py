@@ -93,7 +93,7 @@ def test_call_graph_generator_with_decy_true_builds_complete_graph_for_pytest_fi
     for callee in test_function_callees:
         assert callee in output.keys()
 
-def test_module_order(mocker) -> None:
+def test_do_pass_processes_modules_in_order_files_were_processed(mocker) -> None:
     mock_module_node = mocker.MagicMock()
     mock_module_node.get_methods.side_effect = [
         {"fixtures.tests": {}},
