@@ -2,8 +2,9 @@ from deepdiff import DeepDiff
 import glob
 import os
 import pytest
-from jarviscg.core import CallGraphGenerator
 from jarviscg import formats
+from jarviscg.core import CallGraphGenerator
+from jarviscg.processing.extProcessor import ExtProcessor
 
 # Necessary because CallGraphGenerator expects to be running one directory
 # up from shallowest module definitions
@@ -91,3 +92,40 @@ def test_call_graph_generator_with_decy_true_builds_complete_graph_for_pytest_fi
     assert diff == {}
     for callee in test_function_callees:
         assert callee in output.keys()
+
+def test_do_pass_processes_modules_in_order_files_were_processed(mocker) -> None:
+    mock_module_node = mocker.MagicMock()
+    mock_module_node.get_methods.side_effect = [
+        {"fixtures.tests": {}},
+        {"fixtures.tests.example_test": {}},
+        {"fixtures.fixture_class": {}},
+    ]
+    mock_module_manager = mocker.MagicMock()
+    mock_module_manager.get.return_value = mock_module_node
+    mock_processor_class = mocker.patch("jarviscg.processing.extProcessor.ExtProcessor")
+    entrypoints = [
+        "./fixtures/tests/__init__.py",
+        "./fixtures/tests/example_test.py",
+        "./fixtures/fixture_class.py",
+    ]
+    expected_modules = ["fixtures.tests", "fixtures.tests.example_test", "fixtures.fixture_class"]
+
+    cg = CallGraphGenerator(entrypoints, None)
+    cg.module_manager = mock_module_manager
+    cg.do_pass(
+        mock_processor_class,
+        True,
+        set(),
+        mocker.Mock(),
+        mocker.Mock(),
+        mocker.Mock(),
+        mocker.Mock(),
+        mock_module_manager,
+        mocker.Mock(),
+        mocker.Mock(),
+        mocker.Mock(),
+    )
+
+    analyze_localfunction_args = mock_processor_class.mock_calls[-1].args[0]
+    diff = DeepDiff(expected_modules, analyze_localfunction_args)
+    assert diff == {}
