@@ -6,6 +6,7 @@ from jarviscg import formats
 from jarviscg.core import CallGraphGenerator
 from jarviscg.processing.extProcessor import ExtProcessor
 
+
 # Necessary because CallGraphGenerator expects to be running one directory
 # up from shallowest module definitions
 @pytest.fixture(autouse=True)
@@ -13,6 +14,30 @@ def change_directory():
     os.chdir("tests")
     yield
     os.chdir("../")
+
+def test_call_graph_generator_includes_indexed_classes() -> None:
+    # Fixture setup:
+    # - `klass.py` imports `LazyFrame` from `fixtures`
+    # - `Klass#other_method` invokes `LazyFrame::__init__`
+    # - `fixtures/lazyframe/__init__.py` exports `LazyFrame` using `__all__`
+
+    entrypoints = [
+            "./fixtures/__init__.py",
+            "./fixtures/lazyframe/__init__.py",
+            "./fixtures/lazyframe/frame.py",
+            "./fixtures/core/__init__.py",
+            "./fixtures/core/nested/klass.py",
+            "./fixtures/core/nested/__init__.py",
+    ]
+    expected = ["<builtin>.list", "fixtures.lazyframe.LazyFrame.from_list"]
+    key = "fixtures.core.nested.klass.Klass.other_method"
+    cg = CallGraphGenerator(entrypoints, None)
+    cg.analyze()
+    formatter = formats.Simple(cg)
+    output = formatter.generate()
+
+    diff = DeepDiff(output[key], expected)
+    assert diff == {}
 
 def test_call_graph_generator_includes_indexed_functions() -> None:
     # Fixture setup:

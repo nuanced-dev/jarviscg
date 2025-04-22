@@ -2,7 +2,12 @@ from fixtures._utils.parse import (
     parse_into_list_of_expressions,
 )
 
+
 class LazyFrame:
+    @classmethod
+    def from_list(cls, l):
+        return cls(l)
+
     def group_by(
         self,
         *by,
