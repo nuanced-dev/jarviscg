@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.0rc3] - 2025-04-25
+
+### Added
+
+### Fixed
+
+- Ensure modules are analyzed in the same order as files, depth-first by directory/module, instead of in random order (https://github.com/nuanced-dev/jarviscg/pull/27)
+
+### Changed
+
+- Restore jarviscg's original handling of edges defined via aliases (https://github.com/nuanced-dev/jarviscg/pull/31)
+
+### Removed
+
 ## [0.1.0rc2] - 2025-03-27
 
 ### Added
