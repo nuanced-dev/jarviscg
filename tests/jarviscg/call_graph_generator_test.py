@@ -17,9 +17,10 @@ def change_directory():
 
 def test_call_graph_generator_excludes_calls_to_methods_of_aliased_class() -> None:
     # Fixture setup:
-    # - `klass.py` imports `LazyFrame` from `fixtures`
-    # - `Klass#other_method` invokes `LazyFrame::__init__`
     # - `fixtures/lazyframe/__init__.py` exports `LazyFrame` using `__all__`
+    # - `klass.py` imports `LazyFrame` from `fixtures`
+    # - `Klass#other_method` invokes `LazyFrame.from_list` class method and
+    # `LazyFrame#group_by` instance method
 
     entrypoints = [
             "./fixtures/__init__.py",
