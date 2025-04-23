@@ -8,6 +8,9 @@ class LazyFrame:
     def from_list(cls, l):
         return cls(l)
 
+    def __init__(self, l=[]):
+        self.ls = l
+
     def group_by(
         self,
         *by,

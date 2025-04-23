@@ -8,4 +8,5 @@ class Klass():
 
     def other_method(self):
         new_list = list()
-        return LazyFrame.from_list(new_list)
+        lf = LazyFrame.from_list(new_list)
+        return lf.group_by("foo", maintain_order=False, __structify=False)
