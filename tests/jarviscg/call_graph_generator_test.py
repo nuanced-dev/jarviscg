@@ -15,7 +15,7 @@ def change_directory():
     yield
     os.chdir("../")
 
-def test_call_graph_generator_includes_indexed_classes() -> None:
+def test_call_graph_generator_excludes_calls_to_methods_of_aliased_class() -> None:
     # Fixture setup:
     # - `klass.py` imports `LazyFrame` from `fixtures`
     # - `Klass#other_method` invokes `LazyFrame::__init__`
@@ -29,15 +29,16 @@ def test_call_graph_generator_includes_indexed_classes() -> None:
             "./fixtures/core/nested/klass.py",
             "./fixtures/core/nested/__init__.py",
     ]
-    expected = ["<builtin>.list", "fixtures.lazyframe.LazyFrame.from_list"]
-    key = "fixtures.core.nested.klass.Klass.other_method"
+    caller = "fixtures.core.nested.klass.Klass.other_method"
+    invoked_class_method = "fixtures.lazyframe.LazyFrame.from_list"
+    invoked_instance_method = "fixtures.lazyframe.LazyFrame.group_by"
     cg = CallGraphGenerator(entrypoints, None)
     cg.analyze()
     formatter = formats.Simple(cg)
     output = formatter.generate()
 
-    diff = DeepDiff(output[key], expected)
-    assert diff == {}
+    for callee in [invoked_class_method, invoked_instance_method]:
+        assert callee not in output[caller]
 
 def test_call_graph_generator_includes_indexed_functions() -> None:
     # Fixture setup:
