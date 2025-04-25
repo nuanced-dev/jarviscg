@@ -252,17 +252,6 @@ class ExtProcessor(ProcessingBase):
             # to have the correct points_to set
             iterate_mod_items(functions_and_classes["functions"], utils.constants.FUN_DEF)
             iterate_mod_items(functions_and_classes["classes"], utils.constants.CLS_DEF)
-
-            if self.filename.endswith(f"/{utils.constants.INIT_FILE_NAME}"):
-                indexed_functions = self._parse_module_index(self.modname, self.contents)
-
-                for indexed_function, referenced_function in indexed_functions.items():
-                    indexed_function_defi = self.def_manager.get(indexed_function) or self.def_manager.create(indexed_function, utils.constants.FUN_DEF)
-                    referenced_function_defi = self.def_manager.get(referenced_function) or self.def_manager.create(referenced_function, utils.constants.FUN_DEF)
-                    mod.add_method(indexed_function_defi.get_ns())
-
-                    self.cg.add_edge(indexed_function_defi.get_ns(), referenced_function_defi.get_ns())
-
             self.pushStack(root_defi)
         self.modules_analyzed.add(self.filename)
 
@@ -2092,31 +2081,3 @@ class ExtProcessor(ProcessingBase):
         #     # return ['<map>']
         else:
             return [calleeNs]
-
-    def _parse_module_index(self, modname, contents):
-        indexed_function_names = {}
-
-        tree = ast.parse(contents)
-
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ImportFrom):
-                for alias in node.names:
-                    indexed_function_names[alias.name] = node.module
-
-            if isinstance(node, ast.Assign):
-                if isinstance(node.targets[0], ast.Name) and node.targets[0].id == utils.constants.ALL_LIST_NAME:
-                    if isinstance(node.value, ast.List):
-                        for element in node.value.elts:
-                            if isinstance(element, ast.Constant):
-                                if element.value not in indexed_function_names.keys():
-                                    del indexed_function_names[element.value]
-                    break
-
-        indexed_functions = {}
-
-        for function_name, module_path in indexed_function_names.items():
-            indexed_function = ".".join([modname, function_name])
-            referenced_function = ".".join([module_path, function_name])
-            indexed_functions[indexed_function] = referenced_function
-
-        return indexed_functions

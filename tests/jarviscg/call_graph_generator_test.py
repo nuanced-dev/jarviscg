@@ -58,8 +58,8 @@ def test_call_graph_generator_includes_aliased_functions() -> None:
     formatter = formats.Simple(cg)
     output = formatter.generate()
 
-    assert output["fixtures.core.nested.klass.Klass.method"] == ["fixtures._utils.parse.parse_into_list_of_expressions"]
-    assert output["fixtures._utils.parse.parse_into_list_of_expressions"] == ["fixtures._utils.parse.expr.parse_into_list_of_expressions"]
+    assert output["fixtures.core.nested.klass.Klass.method"] == ["fixtures._utils.parse.expr.parse_into_list_of_expressions"]
+    assert output["fixtures._utils.parse.expr.parse_into_list_of_expressions"] == ["fixtures._utils.parse.expr._parse_positional_inputs"]
 
 def test_call_graph_generator_includes_refs_to_aliased_classes() -> None:
     caller_of_aliased_class = "fixtures.other_fixture_class.OtherFixtureClass.baz"
