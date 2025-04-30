@@ -4,18 +4,11 @@ import pytest
 from jarviscg.core import CallGraphGenerator
 from jarviscg import formats
 
-# Necessary because CallGraphGenerator expects to be running one directory
-# up from shallowest module definitions
-@pytest.fixture(autouse=True)
-def change_directory():
-    os.chdir("tests")
-    yield
-    os.chdir("../")
 
 def test_nuanced_formatter_formats_graph() -> None:
     entrypoints = [
-        "./fixtures/fixture_class.py",
-        "./fixtures/other_fixture_class.py",
+        "./tests/fixtures/fixture_class.py",
+        "./tests/fixtures/other_fixture_class.py",
     ]
     expected = {
         "fixtures.fixture_class": {
@@ -26,7 +19,7 @@ def test_nuanced_formatter_formats_graph() -> None:
         },
         "fixtures.other_fixture_class": {
             "filepath": os.path.abspath("fixtures/other_fixture_class.py"),
-            "callees": ["fixtures.other_fixture_class.OtherFixtureClass"],
+            "callees": ["fixtures.other_fixture_class.OtherFixtureClass", "fixtures.fixture_class"],
             "lineno": 1,
             "end_lineno": 6
         },
@@ -55,7 +48,7 @@ def test_nuanced_formatter_formats_graph() -> None:
             "end_lineno": 8
         }
     }
-    cg = CallGraphGenerator(entrypoints, None)
+    cg = CallGraphGenerator(entrypoints, "tests")
     cg.analyze()
 
     formatter = formats.Nuanced(cg)
