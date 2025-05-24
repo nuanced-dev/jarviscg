@@ -1,6 +1,4 @@
 from deepdiff import DeepDiff
-import glob
-import os
 import pytest
 from jarviscg import formats
 from jarviscg.core import CallGraphGenerator
