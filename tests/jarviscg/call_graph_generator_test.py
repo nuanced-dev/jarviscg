@@ -98,3 +98,19 @@ def test_call_graph_generator_default_builds_complete_graph_for_pytest_file() ->
     assert "tests.fixtures.fixture_class.FixtureClass" in output.keys()
     for callee in expected_callees:
         assert callee in test_function_callees
+
+def test_methods_invoked_on_imports() -> None:
+    package = "tests"
+    entrypoints = ["./tests/fixtures/fixture_class.py"]
+
+    cg = CallGraphGenerator(entrypoints, package)
+    cg.analyze()
+    formatter = formats.Simple(cg)
+    output = formatter.generate()
+    expected_callees = [
+        "multiprocessing.Pipe.__init__",
+        "datetime.now"
+    ]
+
+    for callee in expected_callees:
+        assert callee in output["fixtures.fixture_class.FixtureClass.foo"]
