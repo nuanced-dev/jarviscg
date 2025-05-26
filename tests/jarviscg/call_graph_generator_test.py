@@ -108,6 +108,7 @@ def test_methods_invoked_on_imports() -> None:
     formatter = formats.Simple(cg)
     output = formatter.generate()
     expected_callees = [
+        "multiprocessing.Process",
         "multiprocessing.Pipe.__init__",
         "datetime.now"
     ]
