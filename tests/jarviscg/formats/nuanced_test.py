@@ -43,7 +43,7 @@ def test_nuanced_formatter_formats_graph() -> None:
         },
         "fixtures.fixture_class.FixtureClass.foo": {
             "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
-            "callees": ["multiprocessing.Process"],
+            "callees": ["multiprocessing.Process", "multiprocessing.Pipe", "datetime.datetime.now"],
             "lineno": 9,
             "end_lineno": 12
         }
