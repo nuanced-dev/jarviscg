@@ -205,6 +205,16 @@ class ExtProcessor(ProcessingBase):
         imp = self.module_manager.get(self.get_module_ns(self.current_ns))
         self.import_manager.set_current_mod(imp.name, imp.filename)
 
+    def visit_Attribute(self, node):
+        if isinstance(node.value, ast.Name):
+            value_defi = self.def_manager.get(node.value.id)
+
+            if value_defi and value_defi.get_type() == utils.constants.EXT_DEF:
+                attr_ns = utils.join_ns(node.value.id, node.attr)
+                defi = self.def_manager.get(attr_ns) or self.def_manager.create(attr_ns, utils.constants.EXT_DEF)
+        else:
+            pass
+
     def visit_Module(self, node):
         def iterate_mod_items(items, const):
             for item in items:
@@ -1181,10 +1191,6 @@ class ExtProcessor(ProcessingBase):
                         (map(lambda x: self.find_field(x, field), XPointList)),
                     )
                 )
-                if not xFieldList and XPointList:
-                    k = XPointList[0] + "." + field
-                    d = self.def_manager.get(k) or self.def_manager.create(k, utils.constants.EXT_DEF)
-                    xFieldList = [d]
 
                 for XPoint in XPointList:
                     Xdefi = self.def_manager.get(XPoint)
@@ -1977,8 +1983,10 @@ class ExtProcessor(ProcessingBase):
             # return utils.join_ns(scopeNs,field)
         scope: ScopeItem = self.scope_manager.get_scope(scopeNs)
         scopeDefi: Definition = self.def_manager.get(scopeNs)
-        if not scope and scopeDefi == utils.constants.EXT_DEF:
-            return utils.join_ns(scopeNs, field)
+        if not scope and scopeDefi.get_type() == utils.constants.EXT_DEF:
+            ns = utils.join_ns(scopeNs, field)
+            defi: Definition = self.def_manager.get(ns)
+            return defi
         defi: Definition = self.def_manager.get(scopeNs)
         if not scope:
             return None

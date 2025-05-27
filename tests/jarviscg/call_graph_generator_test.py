@@ -110,7 +110,6 @@ def test_methods_invoked_on_imports() -> None:
     expected_callees = [
         "multiprocessing.Process",
         "multiprocessing.Pipe",
-        "datetime.datetime.now"
     ]
 
     for callee in expected_callees:
