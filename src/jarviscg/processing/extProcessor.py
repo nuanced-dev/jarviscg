@@ -88,7 +88,6 @@ class ExtProcessor(ProcessingBase):
             def func(callee):
                 if isinstance(callee, Definition):
                     callee = callee.get_ns()
-                    print(f"callee: {callee}")
                 if isinstance(callee, ScopeItem):
                     callee = callee.get_ns()
                 return self.resolve(callee, row)
@@ -342,8 +341,6 @@ class ExtProcessor(ProcessingBase):
             return src_name
 
         def handle_scopes(imp_name, tgt_name, modname):
-            print(f"imp_name: {imp_name}")
-            print(f"tgt_name: {tgt_name}")
             def create_def(scope, name):
                 if name not in scope.get_defs():
                     def_ns = utils.join_ns(scope.get_ns(), name)
@@ -405,14 +402,11 @@ class ExtProcessor(ProcessingBase):
         for import_item in node.names:
             src_name = handle_src_name(import_item.name)
             tgt_name = import_item.asname if import_item.asname else import_item.name
-            print(f"src_name: {src_name}")
-            print(f"tgt_name: {tgt_name}")
             if src_name == "tldextract":
                 print()
             if tgt_name == "TLDExtract":
                 print()
             imported_name = self.import_manager.handle_import(src_name, level)
-            print(f"imported_name: {imported_name}")
             if not imported_name:
                 add_external_def(src_name, tgt_name, node.lineno)
                 continue
@@ -422,7 +416,6 @@ class ExtProcessor(ProcessingBase):
                 continue
             if not self.decy:
                 if self.import_manager.get_mod_dir() not in fname:
-                    print(f"adding ext def: {src_name}, {tgt_name}")
                     add_external_def(src_name, tgt_name)
                     continue
             if fname.endswith(".py") and not imported_name in self.modules_analyzed:
