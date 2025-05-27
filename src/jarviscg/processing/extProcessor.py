@@ -1181,9 +1181,9 @@ class ExtProcessor(ProcessingBase):
                         (map(lambda x: self.find_field(x, field), XPointList)),
                     )
                 )
-                if not xFieldList:
+                if not xFieldList and XPointList:
                     k = XPointList[0] + "." + field
-                    d = self.def_manager.create(k, utils.constants.EXT_DEF)
+                    d = self.def_manager.get(k) or self.def_manager.create(k, utils.constants.EXT_DEF)
                     xFieldList = [d]
 
                 for XPoint in XPointList:
