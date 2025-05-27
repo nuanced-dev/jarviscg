@@ -207,13 +207,13 @@ class ExtProcessor(ProcessingBase):
 
     def visit_Attribute(self, node):
         if isinstance(node.value, ast.Name):
-            value_defi = self.def_manager.get(node.value.id)
+            current_scope: ScopeItem = self.scope_manager.get_scope(self.import_manager.current_module)
+            value_defi = current_scope.get_def(node.value.id)
 
-            if value_defi and value_defi.get_type() == utils.constants.EXT_DEF:
+            if value_defi:
                 attr_ns = utils.join_ns(node.value.id, node.attr)
-                defi = self.def_manager.get(attr_ns) or self.def_manager.create(attr_ns, utils.constants.EXT_DEF)
-        else:
-            pass
+                if not self.def_manager.get(attr_ns): 
+                    self.def_manager.create(attr_ns, utils.constants.EXT_DEF)
 
     def visit_Module(self, node):
         def iterate_mod_items(items, const):
