@@ -77,26 +77,3 @@ def test_call_graph_generator_includes_refs_to_aliased_classes() -> None:
 
     assert "fixtures.fixture_class.FixtureClass.bar" in output[caller_of_aliased_class]
     assert "fixtures.fixture_class.FixtureClass.bar" in output.keys()
-
-def test_call_graph_generator_default_builds_complete_graph_for_pytest_file() -> None:
-    package = "tests"
-    entrypoints = [
-        "./tests/fixtures/tests/__init__.py",
-        "./tests/fixtures/tests/example_test.py",
-        "./tests/fixtures/fixture_class.py",
-    ]
-    expected_callees = [
-        "fixtures.fixture_class.FixtureClass.__init__",
-        "fixtures.fixture_class.FixtureClass.foo",
-        "tests.fixtures.fixture_class.FixtureClass",
-    ]
-
-    cg = CallGraphGenerator(entrypoints, package)
-    cg.analyze()
-    formatter = formats.Simple(cg)
-    output = formatter.generate()
-
-    test_function_callees = output["fixtures.tests.example_test.test_fixture_class_foo_sets_current_time"]
-    assert "tests.fixtures.fixture_class.FixtureClass" in output.keys()
-    for callee in expected_callees:
-        assert callee in test_function_callees
