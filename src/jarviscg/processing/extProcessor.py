@@ -1171,22 +1171,25 @@ class ExtProcessor(ProcessingBase):
                     return callDefiNsList
                 pass
             elif isinstance(node.func, ast.Attribute):
-                print(f"node.func.attr: {node.func.attr}")
                 self.visit(node.func)
                 field = node.func.attr
                 xDefiList = self.decode_node(node.func.value)
-                print(f"xDefiList: {xDefiList}")
                 XPointList = self.getYPOint(node.lineno, xDefiList) if xDefiList else []
-                print(f"XPointList: {XPointList}")
                 xFieldList = list(
                     filter(
                         lambda x: x,
                         (map(lambda x: self.find_field(x, field), XPointList)),
                     )
                 )
+                print(f"field: {field}")
+                print(f"xDefiList: {xDefiList}")
+                print(f"XPointList: {XPointList}")
                 print(f"xFieldList: {xFieldList}")
                 for XPoint in XPointList:
                     Xdefi = self.def_manager.get(XPoint)
+                    print("*******")
+                    print(f"point defi Xdefi: {Xdefi.get_ns()}")
+                    print("*******")
                     if isinstance(Xdefi,Definition) and Xdefi.get_type() == utils.constants.MAP_DEF:
                         if field in ['update']:
                             for index, param in enumerate(node.args):
@@ -1199,7 +1202,13 @@ class ExtProcessor(ProcessingBase):
                                         Xdefi.set_element(index,values)
                             # XPoint.add_value_point()
                 print(f"getYPOint: {self.getYPOint(node.lineno, xFieldList)}")
-                return self.getYPOint(node.lineno, xFieldList)
+                if not xFieldList:
+                    print(f"no fields for field {field}")
+                    return XPointList
+                else:
+                    ypoint = self.getYPOint(node.lineno, xFieldList)
+                    print(f"ypoint: {ypoint}")
+                    return ypoint
                 pass
             elif isinstance(node.func, ast.Call):
                 self.visit(node.func)
