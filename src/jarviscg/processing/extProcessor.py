@@ -1181,15 +1181,13 @@ class ExtProcessor(ProcessingBase):
                         (map(lambda x: self.find_field(x, field), XPointList)),
                     )
                 )
-                print(f"field: {field}")
-                print(f"xDefiList: {xDefiList}")
-                print(f"XPointList: {XPointList}")
-                print(f"xFieldList: {xFieldList}")
+                if not xFieldList:
+                    k = XPointList[0] + "." + field
+                    d = self.def_manager.create(k, utils.constants.EXT_DEF)
+                    xFieldList = [d]
+
                 for XPoint in XPointList:
                     Xdefi = self.def_manager.get(XPoint)
-                    print("*******")
-                    print(f"point defi Xdefi: {Xdefi.get_ns()}")
-                    print("*******")
                     if isinstance(Xdefi,Definition) and Xdefi.get_type() == utils.constants.MAP_DEF:
                         if field in ['update']:
                             for index, param in enumerate(node.args):
@@ -1201,14 +1199,7 @@ class ExtProcessor(ProcessingBase):
                                     #     values = self.getYPOint(node.lineno,v)
                                         Xdefi.set_element(index,values)
                             # XPoint.add_value_point()
-                print(f"getYPOint: {self.getYPOint(node.lineno, xFieldList)}")
-                if not xFieldList:
-                    print(f"no fields for field {field}")
-                    return XPointList
-                else:
-                    ypoint = self.getYPOint(node.lineno, xFieldList)
-                    print(f"ypoint: {ypoint}")
-                    return ypoint
+                return self.getYPOint(node.lineno, xFieldList)
                 pass
             elif isinstance(node.func, ast.Call):
                 self.visit(node.func)
