@@ -86,7 +86,7 @@ def test_call_graph_generator_default_builds_complete_graph_for_pytest_file() ->
     expected_callees = [
         "fixtures.fixture_class.FixtureClass.__init__",
         "fixtures.fixture_class.FixtureClass.foo",
-        "tests.fixtures.fixture_class.FixtureClass",
+        "fixtures.fixture_class.FixtureClass",
     ]
 
     cg = CallGraphGenerator(entrypoints, package)
@@ -95,7 +95,7 @@ def test_call_graph_generator_default_builds_complete_graph_for_pytest_file() ->
     output = formatter.generate()
 
     test_function_callees = output["fixtures.tests.example_test.test_fixture_class_foo_sets_current_time"]
-    assert "tests.fixtures.fixture_class.FixtureClass" in output.keys()
+    assert "fixtures.fixture_class.FixtureClass" in output.keys()
     for callee in expected_callees:
         assert callee in test_function_callees
 
