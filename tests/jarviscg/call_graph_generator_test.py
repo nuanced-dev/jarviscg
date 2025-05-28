@@ -100,3 +100,43 @@ def test_call_graph_generator_default_builds_complete_graph_for_pytest_file() ->
     assert "tests.fixtures.fixture_class.FixtureClass" in output.keys()
     for callee in expected_callees:
         assert callee in test_function_callees
+
+def test_call_graph_generator_dependency_analysis_disabled() -> None:
+    package = "tests"
+    entrypoints = [
+        "./tests/fixtures/fixture_class.py",
+        "./tests/fixtures/__init__.py",
+        "./tests/__init__.py",
+    ]
+    dependency_called_function_name = "functools.cache"
+    dependency_called_attribute_name = "datetime.datetime.now"
+
+    cg = CallGraphGenerator(entrypoints, package)
+    cg.analyze()
+    formatter = formats.Simple(cg)
+    output = formatter.generate()
+
+    callees = output["fixtures.fixture_class.FixtureClass.foo"]
+    assert dependency_called_attribute_name not in callees
+    assert dependency_called_function_name in callees
+    assert output[dependency_called_function_name] == []
+
+def test_call_graph_generator_decy_dependency_analysis_enabled() -> None:
+    package = "tests"
+    entrypoints = [
+        "./tests/fixtures/fixture_class.py",
+        "./tests/fixtures/__init__.py",
+        "./tests/__init__.py",
+    ]
+    dependency_called_function_name = "functools.cache"
+    dependency_called_attribute_name = "datetime.datetime.now"
+
+    cg = CallGraphGenerator(entrypoints, package, decy=True)
+    cg.analyze()
+    formatter = formats.Simple(cg)
+    output = formatter.generate()
+
+    callees = output["fixtures.fixture_class.FixtureClass.foo"]
+    assert dependency_called_attribute_name not in callees
+    assert dependency_called_function_name in callees
+    assert len(output[dependency_called_function_name]) > 0
