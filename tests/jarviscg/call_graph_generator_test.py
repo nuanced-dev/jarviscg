@@ -110,6 +110,7 @@ def test_call_graph_generator_dependency_analysis_disabled() -> None:
     ]
     dependency_called_function_name = "functools.cache"
     dependency_called_attribute_name = "datetime.datetime.now"
+    imported_called_name = "multiprocessing.Process"
 
     cg = CallGraphGenerator(entrypoints, package)
     cg.analyze()
@@ -118,6 +119,7 @@ def test_call_graph_generator_dependency_analysis_disabled() -> None:
 
     callees = output["fixtures.fixture_class.FixtureClass.foo"]
     assert dependency_called_attribute_name not in callees
+    assert imported_called_name in callees
     assert dependency_called_function_name in callees
     assert output[dependency_called_function_name] == []
 
@@ -130,6 +132,7 @@ def test_call_graph_generator_decy_dependency_analysis_enabled() -> None:
     ]
     dependency_called_function_name = "functools.cache"
     dependency_called_attribute_name = "datetime.datetime.now"
+    imported_called_name = "multiprocessing.Process"
 
     cg = CallGraphGenerator(entrypoints, package, decy=True)
     cg.analyze()
@@ -138,5 +141,6 @@ def test_call_graph_generator_decy_dependency_analysis_enabled() -> None:
 
     callees = output["fixtures.fixture_class.FixtureClass.foo"]
     assert dependency_called_attribute_name not in callees
+    assert imported_called_name not in callees
     assert dependency_called_function_name in callees
     assert len(output[dependency_called_function_name]) > 0

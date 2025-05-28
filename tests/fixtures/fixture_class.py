@@ -1,5 +1,6 @@
 from datetime import datetime
 from functools import cache
+from multiprocessing import Process
 
 class FixtureClass():
     def __init__(self):
@@ -7,6 +8,7 @@ class FixtureClass():
 
     def foo(self) -> None:
         cache(self.foo)
+        Process()
         self.current_time = datetime.now()
 
     def bar(self) -> None:
