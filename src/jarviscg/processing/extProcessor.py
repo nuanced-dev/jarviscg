@@ -1117,6 +1117,9 @@ class ExtProcessor(ProcessingBase):
         return []
 
     def visit_Call(self, node, decorator=False, decoratorParam=None):
+        if isinstance(node.func, ast.Name):
+            print(f"node.func.id: {node.func.id}")
+
         def resolve_call():
             if decorator:
                 if isinstance(node, ast.Name):

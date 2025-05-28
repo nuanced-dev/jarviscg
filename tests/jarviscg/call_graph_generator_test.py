@@ -86,7 +86,7 @@ def test_call_graph_generator_default_builds_complete_graph_for_pytest_file() ->
     expected_callees = [
         "fixtures.fixture_class.FixtureClass.__init__",
         "fixtures.fixture_class.FixtureClass.foo",
-        "fixtures.fixture_class.FixtureClass",
+        "tests.fixtures.fixture_class.FixtureClass",
     ]
 
     cg = CallGraphGenerator(entrypoints, package)
