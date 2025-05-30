@@ -219,10 +219,7 @@ class ExtProcessor(ProcessingBase):
                         left_defi = self.def_manager.get(left[0])
 
                         if left_defi and left_defi.get_type() == utils.constants.EXT_DEF:
-                            defi = self.def_manager.create(attr_ns, utils.constants.EXT_DEF)
-                            current_scope_node_definition.add_value_point(0, attr_ns)
-                            scope = self.scope_manager.get_scope(self.current_ns)
-                            scope.add_def(attr_ns, defi)
+                            self.def_manager.create(attr_ns, utils.constants.EXT_DEF)
 
         self.visit(node.value)
 
