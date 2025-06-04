@@ -113,6 +113,7 @@ def test_call_graph_generator_dependency_analysis_disabled() -> None:
     dependency_called_attribute_name2 = "multiprocessing.Pipe"
     imported_called_name = "multiprocessing.Process"
     expected_callees = [
+        dependency_called_attribute_name1,
         dependency_called_attribute_name2,
         imported_called_name,
         dependency_called_function_name,
@@ -124,7 +125,6 @@ def test_call_graph_generator_dependency_analysis_disabled() -> None:
     output = formatter.generate()
 
     callees = output["fixtures.fixture_class.FixtureClass.foo"]
-    assert dependency_called_attribute_name1 not in callees
     assert output[dependency_called_function_name] == []
     for callee in expected_callees:
         assert callee in callees

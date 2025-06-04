@@ -211,14 +211,16 @@ class ExtProcessor(ProcessingBase):
             current_scope_node_definition = current_scope_node_definitions and current_scope_node_definitions[0]
 
             if current_scope_node_definition:
-                attr_ns = utils.join_ns(node.value.id, node.attr)
+                left = self.getYPOint(0, current_scope_node_definition.get_ns())
 
-                if not self.def_manager.get(attr_ns):
-                    left = self.getYPOint(0, current_scope_node_definition.get_ns())
-                    if left:
-                        left_defi = self.def_manager.get(left[0])
+                if left:
+                    left_defi = self.def_manager.get(left[0])
 
-                        if left_defi and left_defi.get_type() == utils.constants.EXT_DEF:
+                    if left_defi and left_defi.get_type() == utils.constants.EXT_DEF:
+                        attr_ns = utils.join_ns(left_defi.get_ns(), node.attr)
+                        attr_defi = self.def_manager.get(attr_ns)
+
+                        if not attr_defi:
                             self.def_manager.create(attr_ns, utils.constants.EXT_DEF)
 
         self.visit(node.value)
