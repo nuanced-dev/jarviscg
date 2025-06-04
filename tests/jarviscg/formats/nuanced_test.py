@@ -15,7 +15,7 @@ def test_nuanced_formatter_formats_graph() -> None:
             "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
             "callees": ["fixtures.fixture_class.FixtureClass"],
             "lineno": 1,
-            "end_lineno": 15
+            "end_lineno": 17
         },
         "fixtures.other_fixture_class": {
             "filepath": os.path.abspath("tests/fixtures/other_fixture_class.py"),
@@ -32,20 +32,25 @@ def test_nuanced_formatter_formats_graph() -> None:
         "fixtures.fixture_class.FixtureClass.__init__": {
             "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
             "callees": [],
-            "lineno": 6,
-            "end_lineno": 7
+            "lineno": 7,
+            "end_lineno": 8
         },
         "fixtures.fixture_class.FixtureClass.bar": {
             "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
             "callees": ["fixtures.fixture_class.FixtureClass.foo"],
-            "lineno": 14,
-            "end_lineno": 15
+            "lineno": 16,
+            "end_lineno": 17
         },
         "fixtures.fixture_class.FixtureClass.foo": {
             "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
-            "callees": ["functools.cache", "multiprocessing.Process"],
-            "lineno": 9,
-            "end_lineno": 12
+            "callees": [
+                "functools.cache",
+                "multiprocessing.Process",
+                "multiprocessing.Pipe",
+                "datetime.datetime.now",
+            ],
+            "lineno": 10,
+            "end_lineno": 14
         }
     }
     cg = CallGraphGenerator(entrypoints, "tests")
