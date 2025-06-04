@@ -1990,7 +1990,7 @@ class ExtProcessor(ProcessingBase):
         scope: ScopeItem = self.scope_manager.get_scope(scopeNs)
         scopeDefi: Definition = self.def_manager.get(scopeNs)
 
-        if not scope and scopeDefi.get_type() == utils.constants.EXT_DEF:
+        if not scope and scopeDefi and scopeDefi.get_type() == utils.constants.EXT_DEF:
             return utils.join_ns(scopeNs, field)
         defi: Definition = self.def_manager.get(scopeNs)
         if not scope:
