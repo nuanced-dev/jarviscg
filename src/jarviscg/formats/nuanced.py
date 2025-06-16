@@ -27,8 +27,8 @@ class Nuanced(BaseFormatter):
 
         if self.relpath:
             dir_parts = self.relpath.split("/")
-            last_dir = dir_parts[-1]
-            relpath_prefix = ".".join(dir_parts[:-1])
+            last_dir = dir_parts.pop()
+            relpath_prefix = ".".join(dir_parts)
 
             return {
                 self._transform_name(name, relpath_prefix, last_dir): {
