@@ -36,7 +36,7 @@ class Nuanced(BaseFormatter):
                     "callees": [self._transform_name(callee, relpath_prefix, last_dir) for callee in attrs["callees"]]
                 }
                 for name, attrs in output.items()
-                if name.split(".")[0] == last_dir
+                if name.split(".")[0] == last_dir or last_dir == "."
             }
         else:
             return output
