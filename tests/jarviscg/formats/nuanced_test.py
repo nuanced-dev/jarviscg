@@ -62,7 +62,7 @@ def test_nuanced_formatter_formats_graph() -> None:
     diff = DeepDiff(expected, output, ignore_order=True)
     assert diff == {}
 
-def test_nuanced_formatter_with_relpath_option_formats_graph() -> None:
+def test_nuanced_formatter_with_relpath_formats_graph() -> None:
     entrypoints = [
         "./tests/fixtures/fixture_class.py",
         "./tests/fixtures/other_fixture_class.py",
