@@ -61,3 +61,62 @@ def test_nuanced_formatter_formats_graph() -> None:
 
     diff = DeepDiff(expected, output, ignore_order=True)
     assert diff == {}
+
+def test_nuanced_formatter_with_relpath_option_formats_graph() -> None:
+    entrypoints = [
+        "./tests/fixtures/fixture_class.py",
+        "./tests/fixtures/other_fixture_class.py",
+    ]
+    expected = {
+        "tests.fixtures.fixture_class": {
+            "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
+            "callees": ["tests.fixtures.fixture_class.FixtureClass"],
+            "lineno": 1,
+            "end_lineno": 17
+        },
+        "tests.fixtures.other_fixture_class": {
+            "filepath": os.path.abspath("tests/fixtures/other_fixture_class.py"),
+            "callees": ["tests.fixtures.other_fixture_class.OtherFixtureClass", "tests.fixtures.fixture_class"],
+            "lineno": 1,
+            "end_lineno": 6
+        },
+        "tests.fixtures.other_fixture_class.OtherFixtureClass.baz": {
+            "filepath": os.path.abspath("tests/fixtures/other_fixture_class.py"),
+            "callees": ["tests.fixtures.fixture_class.FixtureClass.bar",
+                        "tests.fixtures.fixture_class.FixtureClass.__init__"],
+            "lineno": 4,
+            "end_lineno": 6
+        },
+        "tests.fixtures.fixture_class.FixtureClass.__init__": {
+            "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
+            "callees": [],
+            "lineno": 7,
+            "end_lineno": 8
+        },
+        "tests.fixtures.fixture_class.FixtureClass.bar": {
+            "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
+            "callees": ["tests.fixtures.fixture_class.FixtureClass.foo"],
+            "lineno": 16,
+            "end_lineno": 17
+        },
+        "tests.fixtures.fixture_class.FixtureClass.foo": {
+            "filepath": os.path.abspath("tests/fixtures/fixture_class.py"),
+            "callees": [
+                "functools.cache",
+                "multiprocessing.Process",
+                "multiprocessing.Pipe",
+                "datetime.datetime.now",
+            ],
+            "lineno": 10,
+            "end_lineno": 14
+        }
+    }
+    relpath = os.path.relpath("tests/fixtures", os.getcwd())
+    cg = CallGraphGenerator(entrypoints, "tests")
+    cg.analyze()
+
+    formatter = formats.Nuanced(cg, relpath=relpath)
+    output = formatter.generate()
+
+    diff = DeepDiff(expected, output, ignore_order=True)
+    assert diff == {}
