@@ -62,7 +62,7 @@ def test_nuanced_formatter_formats_graph() -> None:
     diff = DeepDiff(expected, output, ignore_order=True)
     assert diff == {}
 
-def test_nuanced_formatter_with_scope_prefix_formats_graph() -> None:
+def test_nuanced_formatter_with_cwd_scope_prefix_formats_graph() -> None:
     entrypoints = [
         "./tests/fixtures/fixture_class.py",
         "./tests/fixtures/other_fixture_class.py",
@@ -113,7 +113,7 @@ def test_nuanced_formatter_with_scope_prefix_formats_graph() -> None:
     }
     scope_prefix = os.path.relpath(
         "tests/fixtures",
-        os.path.abspath("tests/fixtures")
+        os.getcwd()
     ).replace("/", ".")
     cg = CallGraphGenerator(entrypoints, "tests")
     cg.analyze()
@@ -124,7 +124,7 @@ def test_nuanced_formatter_with_scope_prefix_formats_graph() -> None:
     diff = DeepDiff(expected, output, ignore_order=True)
     assert diff == {}
 
-def test_nuanced_formatter_with_scope_prefix_as_cwd_formats_graph() -> None:
+def test_nuanced_formatter_with_scope_prefix_formats_graph() -> None:
     entrypoints = [
         "./tests/fixtures/fixture_class.py",
         "./tests/fixtures/other_fixture_class.py",
