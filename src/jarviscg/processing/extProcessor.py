@@ -419,10 +419,6 @@ class ExtProcessor(ProcessingBase):
         for import_item in node.names:
             src_name = handle_src_name(import_item.name)
             tgt_name = import_item.asname if import_item.asname else import_item.name
-            if src_name == "tldextract":
-                print()
-            if tgt_name == "TLDExtract":
-                print()
             imported_name = self.import_manager.handle_import(src_name, level)
             if not imported_name:
                 add_external_def(src_name, tgt_name, node.lineno)
@@ -624,9 +620,6 @@ class ExtProcessor(ProcessingBase):
                             elif isinstance(s, int):
                                 keys.add(s)
                         for key in keys:
-                            for x in decoded:
-                                if not x:
-                                    print()
                             leftDefi.set_element(key, list(map(lambda x: x.get_ns() if isinstance(x,Definition) else x, decoded)))
 
         for target in targets:
@@ -1729,8 +1722,6 @@ class ExtProcessor(ProcessingBase):
                 curScope.add_def(defiNs[len(curScopeNs) + 1:], changedDefi)
 
     def resolve(self, calleeNs: str, row: int, flag=False) -> list:
-        if "__iter__.<return>" in calleeNs:
-            print()
         calleeDefi: Definition = self.def_manager.get(calleeNs)
         tmp = reduce(
             lambda x, y: x or y, map(lambda x: x in calleeNs, utils.constants.BUILTTYPE)
@@ -1790,8 +1781,6 @@ class ExtProcessor(ProcessingBase):
                 rightList.insert(0, ns[rIndex:])
                 ns = ns[:rIndex]
             return [ns], rightList
-        if "__iter__.<RETURN>" in ns:
-            print()
         if not isinstance(ns, str):
             return []
         leftList, rightList = helper(ns)
@@ -1806,9 +1795,6 @@ class ExtProcessor(ProcessingBase):
         leftList = list(
             filter(lambda x: x, self.flatten(list(map(self.convert_final, leftList))))
         )
-        for x in leftList:
-            if "__iter__.<RETURN>" in x:
-                print()
         return leftList
 
     def mergeLeftRight(self, left, row, right):
