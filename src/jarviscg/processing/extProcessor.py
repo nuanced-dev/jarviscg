@@ -1017,14 +1017,14 @@ class ExtProcessor(ProcessingBase):
                     defi = self.def_manager.create(ns, utils.constants.NA_DEF)
                     defis.append(defi)
             return defis
-        elif isinstance(node, ast.Num):
+        elif isinstance(node, ast.Constant) and isinstance(node.value, (int, float, complex)):
             # defiNs = utils.join_ns(self.current_ns, '<int>')
             defiNs = "<int>"
             defi = self.def_manager.get(defiNs)
             if not defi:
                 defi = self.def_manager.create(defiNs, utils.constants.INT_DEF)
             return [defi]
-        elif isinstance(node, ast.Str):
+        elif isinstance(node, ast.Constant) and isinstance(node.value, str):
             defiNs = "<str>"
             defi = self.def_manager.get(defiNs)
             if not defi:
