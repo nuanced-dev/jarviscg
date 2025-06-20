@@ -13,6 +13,5 @@
 # limitations under the License.
 
 from .as_graph import AsGraph
-from .fasten import Fasten
 from .nuanced import Nuanced
 from .simple import Simple

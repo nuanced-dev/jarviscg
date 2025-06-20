@@ -25,7 +25,6 @@ import os
 import importlib.abc
 import importlib.metadata
 import copy
-import pkg_resources
 from jarviscg import utils
 
 def get_custom_loader(ig_obj):
@@ -173,10 +172,6 @@ class ImportManager(object):
             return importlib.import_module(mod_name, package=package)
         return importlib.util.module_from_spec(module_spec)
 
-    def get_version(self,mod_name):
-        tmp = pkg_resources.find_distributions(mod_name,True)
-        print(tmp)
-        pass
     def handle_import(self, name, level,curScope=None):
         # We currently don't support builtin modules because they're frozen.
         # Add an edge and continue.
